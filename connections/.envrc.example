@@ -1,0 +1,8 @@
+# Go to https://developer.twitter.com/en/apps
+# Create a Developer Account
+# Create a new App, request these parameter under "key and tokens"
+
+export TWITTER_API_KEY=""
+export TWITTER_API_SECRET_KEY=""
+export TWITTER_ACCESS_TOKEN=""
+export TWITTER_ACCESS_TOKEN_SECRET=""
