@@ -2,10 +2,12 @@ package utils
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/dghubble/oauth1"
@@ -54,7 +56,7 @@ func returnOauth1Client(oauth1Config map[string]interface{}) (*http.Client, erro
 }
 
 // Get - finally performs the request
-func (c *Client) Get() (string, error) {
+func (c *Client) Get() (interface{}, error) {
 	resp, err := c.client.Get(c.url)
 	if err != nil {
 		return "", err
@@ -65,26 +67,42 @@ func (c *Client) Get() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return string(body), nil
+	return mapContent(body, resp.Header.Get("Content-Type"))
 }
 
 // Post - finally performs the request
-func (c *Client) Post(content string, contentType string) (string, error) {
+func (c *Client) Post(content string, contentType string) (interface{}, error) {
 	payload := []byte(content)
 	resp, err := c.client.Post(c.url, contentType, bytes.NewBuffer(payload))
 	if err != nil {
-		return "", err
+		return []byte{}, err
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return "", err
+		return []byte{}, err
 	}
-	return string(body), nil
+	return mapContent(body, resp.Header.Get("Content-Type"))
+}
+
+// mapContent - this maps the reveiced bytes to a fitting type, matching the content-type
+func mapContent(body []byte, contentType string) (interface{}, error) {
+	if strings.Contains(contentType, "/json") {
+		var jsonBody interface{}
+		err := json.Unmarshal(body, &jsonBody)
+		if err != nil {
+			return nil, err
+		}
+		return jsonBody, nil
+	}
+	if strings.Contains(contentType, "/text") {
+		return string(body), nil
+	}
+	return body, nil
 }
 
 // Debug - outputs some debug infos
 func (c *Client) Debug() {
-	log.Printf("%s", c)
+	log.Printf("%v", c)
 }
