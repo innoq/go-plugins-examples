@@ -23,7 +23,7 @@ func run() error {
 		return err
 	}
 	log.Printf("info: %s", info)
-
+	fmt.Println("")
 	vm, err := getVM(info)
 	if err != nil {
 		return err
@@ -60,6 +60,11 @@ func getVM(info map[string]interface{}) (*otto.Otto, error) {
 		return nil, err
 	}
 
+	err = vm.Set("GET", loadGetRequest(info))
+	if err != nil {
+		return nil, err
+	}
+
 	return vm, nil
 }
 
@@ -67,7 +72,6 @@ func getVM(info map[string]interface{}) (*otto.Otto, error) {
 type Method func(request map[string]interface{}) map[string]interface{}
 
 func loadPostRequest(info map[string]interface{}) Method {
-	log.Println("binding POST Request")
 	return func(request map[string]interface{}) map[string]interface{} {
 		response := make(map[string]interface{})
 		whitelist := info["whitelist"].([]interface{})
@@ -94,6 +98,34 @@ func loadPostRequest(info map[string]interface{}) Method {
 		}
 
 		body, err := client.Post(content, contentType)
+		if err != nil {
+			response["error"] = err.Error()
+			return response
+		}
+
+		response["body"] = body
+		return response
+	}
+}
+
+func loadGetRequest(info map[string]interface{}) Method {
+	return func(request map[string]interface{}) map[string]interface{} {
+		response := make(map[string]interface{})
+		whitelist := info["whitelist"].([]interface{})
+		requestURL := request["host"].(string)
+		err := checkWhitelist(requestURL, whitelist)
+		if err != nil {
+			response["error"] = err.Error()
+			return response
+		}
+
+		client, err := utils.NewClient(request)
+		if err != nil {
+			response["error"] = err.Error()
+			return response
+		}
+
+		body, err := client.Get()
 		if err != nil {
 			response["error"] = err.Error()
 			return response
