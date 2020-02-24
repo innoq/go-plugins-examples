@@ -1,2 +1,4 @@
 .envrc
 .DS_Store
+hashicorp/host
+hashicorp/plugin/hello
