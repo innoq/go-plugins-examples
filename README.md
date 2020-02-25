@@ -1,4 +1,4 @@
-# Otto Plugins Examples
+# Plugins in GO Examples
 
 ## Prerequisites
 
