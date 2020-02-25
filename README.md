@@ -1,4 +1,4 @@
-# Otto VM Examples
+# Otto Plugins Examples
 
 ## Prerequisites
 
