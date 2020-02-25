@@ -14,5 +14,4 @@
         var status = body["statuses"][i];
         LOG(status["created_at"] + " @"+status["user"]["screen_name"] + ": " + status["text"]);
     }
-
 })();
