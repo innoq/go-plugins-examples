@@ -22,12 +22,12 @@ func run() error {
 
 	var err error
 
-	err = runPlugin("twitter-plugin")
+	err = runPlugin("basic-plugin")
 	if err != nil {
 		return err
 	}
 
-	err = runPlugin("basic-auth-plugin")
+	err = runPlugin("twitter-plugin")
 	if err != nil {
 		return err
 	}
