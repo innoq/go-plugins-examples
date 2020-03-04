@@ -96,7 +96,7 @@ func mapContent(body []byte, contentType string) (interface{}, error) {
 		}
 		return jsonBody, nil
 	}
-	if strings.Contains(contentType, "/text") {
+	if strings.Contains(contentType, "text/") {
 		return string(body), nil
 	}
 	return body, nil

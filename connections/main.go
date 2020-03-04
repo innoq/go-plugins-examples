@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/url"
 	"os"
+	"path"
 
 	"github.com/innoq/go-otto-examples/utils"
 	"github.com/robertkrimen/otto"
@@ -18,7 +19,26 @@ func main() {
 }
 
 func run() error {
-	info, err := utils.ReadJSON("./info.json")
+
+	var err error
+
+	err = runPlugin("twitter-plugin")
+	if err != nil {
+		return err
+	}
+
+	err = runPlugin("basic-auth-plugin")
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func runPlugin(plugin string) error {
+
+	fmt.Printf("\n\nrunning Plugin %s: \n\n", plugin)
+	info, err := utils.ReadJSON(path.Join(plugin, "info.json"))
 	if err != nil {
 		return err
 	}
@@ -29,12 +49,15 @@ func run() error {
 		return err
 	}
 
-	script, err := utils.ReadFile("./client.js")
+	script, err := utils.ReadFile(path.Join(plugin, "client.js"))
 	if err != nil {
 		return err
 	}
 
-	vm.Run(script)
+	_, err = vm.Run(script)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -42,13 +65,15 @@ func run() error {
 func getVM(info map[string]interface{}) (*otto.Otto, error) {
 	vm := otto.New()
 
-	envKeys := info["env_variables"].([]interface{})
-	err := utils.InjectEnvironmentVariables(envKeys, vm)
-	if err != nil {
-		return nil, err
+	if envKeyValue, ok := info["env_variables"]; ok {
+		envKeys := envKeyValue.([]interface{})
+		err := utils.InjectEnvironmentVariables(envKeys, vm)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	err = vm.Set("LOG", func(message string) {
+	err := vm.Set("LOG", func(message string) {
 		log.Println(message)
 	})
 	if err != nil {
