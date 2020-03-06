@@ -4,7 +4,7 @@
         "host":"https://google.com"
     }
     response = GET(request);
-    LOG("response: " + JSON.stringify(response));
+    LOG("error response: " + JSON.stringify(response));
 
     request = {
         "host":"http://example.com/api"
