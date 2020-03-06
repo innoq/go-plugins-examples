@@ -2,3 +2,5 @@
 .DS_Store
 hashicorp/host
 hashicorp/plugin/hello
+plugins/host
+*.so
