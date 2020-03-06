@@ -8,7 +8,7 @@ import (
 
 	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/go-plugin"
-	interfaces "github.com/innoq/go-plugins-examples/hashicorp/intefaces"
+	interfaces "github.com/innoq/go-plugins-examples/hashicorp/interfaces"
 )
 
 // handshakeConfigs are used to just do a basic handshake between

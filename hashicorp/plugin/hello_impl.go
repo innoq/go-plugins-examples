@@ -5,7 +5,7 @@ import (
 
 	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/go-plugin"
-	interfaces "github.com/innoq/go-plugins-examples/hashicorp/intefaces"
+	interfaces "github.com/innoq/go-plugins-examples/hashicorp/interfaces"
 )
 
 // Here is a real implementation of Greeter
