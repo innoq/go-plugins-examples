@@ -7,7 +7,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/innoq/go-otto-examples/utils"
+	"github.com/innoq/go-plugins-examples/utils"
 	"github.com/robertkrimen/otto"
 )
 
